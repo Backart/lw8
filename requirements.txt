@@ -7,3 +7,5 @@ faker
 flake8
 pylint
 bandit
+httpx==0.26.0
+httpx==0.26.0
