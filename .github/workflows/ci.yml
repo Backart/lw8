@@ -1,0 +1,54 @@
+name: TMS CI Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+env:
+  MIN_COVERAGE: 75
+
+jobs:
+  lint:
+    name: 'Linting (Flake8 & Pylint)'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install linters
+        run: pip install flake8 pylint
+      - name: Run Flake8
+        run: flake8 src/ --max-line-length=100 --ignore=E203,W503
+      - name: Run Pylint
+        run: pylint src/ --fail-under=7.0
+
+  test:
+    name: 'Tests & Coverage'
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install pytest pytest-cov pytest-mock faker
+      - name: Run pytest
+        run: pytest --cov=src --cov-report=term --cov-fail-under=${{ env.MIN_COVERAGE }}
+
+  security:
+    name: 'Security Check (Bandit)'
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install Bandit
+        run: pip install bandit
+      - name: Run Bandit
+        run: bandit -r src/ -ll -q
