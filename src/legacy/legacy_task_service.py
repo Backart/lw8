@@ -2,6 +2,7 @@
 Module for legacy task management service.
 Provides repository and service for task operations.
 """
+
 import datetime
 from dataclasses import dataclass, field
 from enum import IntEnum

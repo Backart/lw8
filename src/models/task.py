@@ -3,12 +3,14 @@ from typing import Optional
 from enum import Enum
 from uuid import UUID, uuid4
 
+
 class TaskStatus(str, Enum):
-    TODO = 'todo'
-    IN_PROGRESS = 'in_progress'
-    REVIEW = 'review'
-    DONE = 'done'
-    CANCELLED = 'cancelled'
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    REVIEW = "review"
+    DONE = "done"
+    CANCELLED = "cancelled"
+
 
 @dataclass
 class Task:
